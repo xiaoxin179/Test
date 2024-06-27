@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruit.mapper.RecruitPositionMapper">
+
+    <resultMap type="RecruitPosition" id="RecruitPositionResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="requirement"    column="requirement"    />
+        <result property="workCity"    column="work_city"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="releaseDate"    column="release_date"    />
+        <result property="validDate"    column="valid_date"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="status"    column="status"    />
+        <result property="auditState"    column="audit_state"    />
+        <result property="salaryUp"    column="salary_up"    />
+        <result property="salaryDown"    column="salary_down"    />
+        <result property="hot"    column="hot"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="categoryId"    column="category_id"    />
+        <association property="category" javaType="com.ruoyi.recruit.domain.RecruitCategory">
+            <result property="id"    column="cid"    />
+            <result property="categoryName"    column="category_name"    />
+            <result property="description"    column="description"    />
+            <result property="parentId"    column="parent_id"    />
+            <association property="parentCategory" javaType="com.ruoyi.recruit.domain.RecruitCategory">
+                <result property="categoryName"    column="pc"    />
+                <result property="description"    column="pd"    />
+            </association>
+        </association>
+        <association property="company" javaType="RecruitCompanyInfo">
+            <result property="id" column="id"/>
+            <result property="name" column="rcin"/>
+            <result property="address" column="address"/>
+            <result property="phonenumber" column="rcip"/>
+            <result property="logo" column="logo"/>
+            <result property="license" column="license"/>
+            <result property="nature" column="nature"/>
+            <result property="description" column="rcides"/>
+            <result property="auditState" column="rcis"/>
+            <result property="hot" column="rcih"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectRecruitPositionVo">
+        select rp.id,
+               rp.name,
+               requirement,
+               work_city,
+               rp.phonenumber,
+               release_date,
+               valid_date,
+               quantity,
+               status,
+               rp.audit_state,
+               salary_up,
+               salary_down,
+               rp.hot rph,
+               rp.company_id,
+               category_id,
+
+               rci.name rcin,
+               address,
+               rci.phonenumber rcip,
+               logo,
+               license,
+               nature,
+               rci.description rcides,
+               rci.audit_state rcis,
+               rci.hot rcih,
+
+               cc.id cid,
+               cc.category_name,
+               cc.description ccd,
+               cc.parent_id,
+               pc.category_name pc,
+               pc.description pd
+        from recruit_position rp
+                 left join recruit_company_info rci on rci.id = rp.company_id
+                 left join recruit_category cc on cc.id = rp.category_id
+                 left join recruit_category pc on cc.parent_id = pc.id
+    </sql>
+
+    <select id="selectRecruitPositionList" parameterType="RecruitPosition" resultMap="RecruitPositionResult">
+        <include refid="selectRecruitPositionVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and rp.name like concat('%', #{name}, '%')</if>
+            <if test="requirement != null  and requirement != ''"> and requirement like concat('%', #{requirement}, '%')</if>
+            <if test="workCity != null  and workCity != ''"> and work_city = #{workCity}</if>
+            <if test="phonenumber != null  and phonenumber != ''"> and phonenumber = #{phonenumber}</if>
+            <if test="releaseDate != null "> and release_date = #{releaseDate}</if>
+            <if test="validDate != null "> and valid_date = #{validDate}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="auditState != null "> and rp.audit_state = #{auditState}</if>
+            <if test="salaryUp != null "> and salary_up = #{salaryUp}</if>
+            <if test="salaryDown != null "> and salary_down = #{salaryDown}</if>
+            <if test="hot != null "> and hot = #{hot}</if>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <select id="selectRecruitPositionById" parameterType="Long" resultMap="RecruitPositionResult">
+        <include refid="selectRecruitPositionVo"/>
+        where rp.id = #{id}
+    </select>
+
+    <insert id="insertRecruitPosition" parameterType="RecruitPosition" useGeneratedKeys="true" keyProperty="id">
+        insert into recruit_position
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="requirement != null and requirement != ''">requirement,</if>
+            <if test="workCity != null and workCity != ''">work_city,</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+            <if test="releaseDate != null">release_date,</if>
+            <if test="validDate != null">valid_date,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="status != null">status,</if>
+            <if test="auditState != null">audit_state,</if>
+            <if test="salaryUp != null">salary_up,</if>
+            <if test="salaryDown != null">salary_down,</if>
+            <if test="hot != null">hot,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="categoryId != null">category_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="requirement != null and requirement != ''">#{requirement},</if>
+            <if test="workCity != null and workCity != ''">#{workCity},</if>
+            <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+            <if test="releaseDate != null">#{releaseDate},</if>
+            <if test="validDate != null">#{validDate},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="status != null">#{status},</if>
+            <if test="auditState != null">#{auditState},</if>
+            <if test="salaryUp != null">#{salaryUp},</if>
+            <if test="salaryDown != null">#{salaryDown},</if>
+            <if test="hot != null">#{hot},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRecruitPosition" parameterType="RecruitPosition">
+        update recruit_position
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="requirement != null and requirement != ''">requirement = #{requirement},</if>
+            <if test="workCity != null and workCity != ''">work_city = #{workCity},</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="releaseDate != null">release_date = #{releaseDate},</if>
+            <if test="validDate != null">valid_date = #{validDate},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditState != null">audit_state = #{auditState},</if>
+            <if test="salaryUp != null">salary_up = #{salaryUp},</if>
+            <if test="salaryDown != null">salary_down = #{salaryDown},</if>
+            <if test="hot != null">hot = #{hot},</if>
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRecruitPositionById" parameterType="Long">
+        delete from recruit_position where id = #{id}
+    </delete>
+
+    <delete id="deleteRecruitPositionByIds" parameterType="String">
+        delete from recruit_position where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

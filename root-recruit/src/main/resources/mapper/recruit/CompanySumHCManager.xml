@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ruoyi.recruit.mapper.CompanySumHCMapper">
+
+    <!-- 查询每个企业的 quantity 总和 -->
+    <select id="getCompanySum" resultType="com.ruoyi.recruit.domain.bo.CompanySumHC">
+        SELECT
+            c.name AS name,
+            SUM(p.quantity) AS value
+        FROM
+            recruit_position p
+                JOIN
+            recruit_company_info c ON p.company_id = c.id
+        GROUP BY
+            c.id, c.name
+    </select>
+
+</mapper>

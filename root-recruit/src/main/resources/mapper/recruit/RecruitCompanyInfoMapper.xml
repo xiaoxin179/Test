@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruit.mapper.RecruitCompanyInfoMapper">
+
+    <resultMap type="RecruitCompanyInfo" id="RecruitCompanyInfoResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="address"    column="address"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="logo"    column="logo"    />
+        <result property="license"    column="license"    />
+        <result property="nature"    column="nature"    />
+        <result property="description"    column="description"    />
+        <result property="auditState"    column="audit_state"    />
+        <result property="hot"    column="hot"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectRecruitCompanyInfoVo">
+        select id, name, address, phonenumber, logo, license, nature, description, audit_state, hot, user_id from recruit_company_info
+    </sql>
+
+    <select id="selectRecruitCompanyInfoList" parameterType="RecruitCompanyInfo" resultMap="RecruitCompanyInfoResult">
+        <include refid="selectRecruitCompanyInfoVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="phonenumber != null  and phonenumber != ''"> and phonenumber = #{phonenumber}</if>
+            <if test="logo != null  and logo != ''"> and logo = #{logo}</if>
+            <if test="license != null  and license != ''"> and license = #{license}</if>
+            <if test="nature != null "> and nature = #{nature}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="auditState != null "> and audit_state = #{auditState}</if>
+            <if test="hot != null "> and hot = #{hot}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <select id="selectRecruitCompanyInfoById" parameterType="Long" resultMap="RecruitCompanyInfoResult">
+        <include refid="selectRecruitCompanyInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertRecruitCompanyInfo" parameterType="RecruitCompanyInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into recruit_company_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+            <if test="logo != null">logo,</if>
+            <if test="license != null">license,</if>
+            <if test="nature != null">nature,</if>
+            <if test="description != null">description,</if>
+            <if test="auditState != null">audit_state,</if>
+            <if test="hot != null">hot,</if>
+            <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+            <if test="logo != null">#{logo},</if>
+            <if test="license != null">#{license},</if>
+            <if test="nature != null">#{nature},</if>
+            <if test="description != null">#{description},</if>
+            <if test="auditState != null">#{auditState},</if>
+            <if test="hot != null">#{hot},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRecruitCompanyInfo" parameterType="RecruitCompanyInfo">
+        update recruit_company_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="logo != null">logo = #{logo},</if>
+            <if test="license != null">license = #{license},</if>
+            <if test="nature != null">nature = #{nature},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="auditState != null">audit_state = #{auditState},</if>
+            <if test="hot != null">hot = #{hot},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="params.userId != null and params.userId != ''"><!-- 根据用户ID设置logo或者license -->
+                and userId = #{userId}
+            </if>
+        </where>
+    </update>
+
+    <delete id="deleteRecruitCompanyInfoById" parameterType="Long">
+        delete from recruit_company_info where id = #{id}
+    </delete>
+
+    <delete id="deleteRecruitCompanyInfoByIds" parameterType="String">
+        delete from recruit_company_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

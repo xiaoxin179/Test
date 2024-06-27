@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruit.mapper.RecruitClassroomMapper">
+
+    <resultMap type="RecruitClassroom" id="RecruitClassroomResult">
+        <result property="id"    column="id"    />
+        <result property="classroom"    column="classroom"    />
+        <result property="place"    column="place"    />
+        <result property="capacity"    column="capacity"    />
+        <result property="occupied"    column="occupied"    />
+    </resultMap>
+
+    <sql id="selectRecruitClassroomVo">
+        select id, classroom, place, capacity, occupied from recruit_classroom
+    </sql>
+
+    <select id="selectRecruitClassroomList" parameterType="RecruitClassroom" resultMap="RecruitClassroomResult">
+        <include refid="selectRecruitClassroomVo"/>
+        <where>
+            <if test="classroom != null  and classroom != ''"> and classroom = #{classroom}</if>
+            <if test="place != null  and place != ''"> and place = #{place}</if>
+            <if test="capacity != null "> and capacity = #{capacity}</if>
+            <if test="occupied != null "> and occupied = #{occupied}</if>
+        </where>
+    </select>
+
+    <select id="selectRecruitClassroomById" parameterType="Long" resultMap="RecruitClassroomResult">
+        <include refid="selectRecruitClassroomVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertRecruitClassroom" parameterType="RecruitClassroom" useGeneratedKeys="true" keyProperty="id">
+        insert into recruit_classroom
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classroom != null">classroom,</if>
+            <if test="place != null">place,</if>
+            <if test="capacity != null">capacity,</if>
+            <if test="occupied != null">occupied,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classroom != null">#{classroom},</if>
+            <if test="place != null">#{place},</if>
+            <if test="capacity != null">#{capacity},</if>
+            <if test="occupied != null">#{occupied},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRecruitClassroom" parameterType="RecruitClassroom">
+        update recruit_classroom
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classroom != null">classroom = #{classroom},</if>
+            <if test="place != null">place = #{place},</if>
+            <if test="capacity != null">capacity = #{capacity},</if>
+            <if test="occupied != null">occupied = #{occupied},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateOccupied">
+        update recruit_classroom
+        set occupied=#{occupied}
+        where classroom = #{classroom}
+    </update>
+
+    <delete id="deleteRecruitClassroomById" parameterType="Long">
+        delete from recruit_classroom where id = #{id}
+    </delete>
+
+    <delete id="deleteRecruitClassroomByIds" parameterType="String">
+        delete from recruit_classroom where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

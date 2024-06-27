@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruit.mapper.RecruitDeliveryMapper">
+
+    <resultMap type="RecruitDelivery" id="RecruitDeliveryResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="positionName"    column="position_name"    />
+        <result property="status"    column="status"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+        <association property="position" javaType="RecruitPosition">
+            <result property="requirement"    column="requirement"    />
+            <result property="workCity"    column="work_city"    />
+            <result property="phonenumber"    column="rpp"    />
+            <result property="releaseDate"    column="release_date"    />
+            <result property="validDate"    column="valid_date"    />
+            <result property="quantity"    column="quantity"    />
+            <result property="salaryUp"    column="salary_up"    />
+            <result property="salaryDown"    column="salary_down"    />
+        </association>
+        <association property="company" javaType="RecruitCompanyInfo">
+            <result property="address" column="address"/>
+            <result property="phonenumber" column="rcip"/>
+            <result property="nature" column="nature"/>
+            <result property="logo" column="logo"/>
+            <result property="description" column="description"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectRecruitDeliveryVo">
+        select rd.id,
+               rd.user_id,
+               user_name,
+               position_id,
+               position_name,
+               rd.company_id,
+               company_name,
+               rd.status,
+
+               requirement,
+               work_city,
+               rp.phonenumber rpp,
+               release_date,
+               valid_date,
+               quantity,
+               salary_up,
+               salary_down,
+
+               address,
+               rci.phonenumber rcip,
+               nature,
+               logo,
+               description
+        from recruit_delivery rd
+                 left join recruit_company_info rci on rd.company_id = rci.id
+                 left join recruit_position rp on rd.position_id = rp.id
+    </sql>
+
+    <select id="selectRecruitDeliveryList" parameterType="RecruitDelivery" resultMap="RecruitDeliveryResult">
+        <include refid="selectRecruitDeliveryVo"/>
+        <where>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="positionName != null  and positionName != ''"> and position_name like concat('%', #{positionName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="userId != null "> and rci.user_id = #{userId}</if>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectRecruitDeliveryById" parameterType="Long" resultMap="RecruitDeliveryResult">
+        <include refid="selectRecruitDeliveryVo"/>
+        where rd.id = #{id}
+    </select>
+
+    <insert id="insertRecruitDelivery" parameterType="RecruitDelivery" useGeneratedKeys="true" keyProperty="id">
+        insert into recruit_delivery
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="positionId != null">position_id,</if>
+            <if test="positionName != null">position_name,</if>
+            <if test="status != null">status,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="companyName != null">company_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="positionId != null">#{positionId},</if>
+            <if test="positionName != null">#{positionName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="companyName != null">#{companyName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRecruitDelivery" parameterType="RecruitDelivery">
+        update recruit_delivery
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="positionId != null">position_id = #{positionId},</if>
+            <if test="positionName != null">position_name = #{positionName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="companyName != null">company_name = #{companyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRecruitDeliveryById" parameterType="Long">
+        delete from recruit_delivery where id = #{id}
+    </delete>
+
+    <delete id="deleteRecruitDeliveryByIds" parameterType="String">
+        delete from recruit_delivery where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruit.mapper.RecruitCategoryMapper">
+
+    <resultMap type="com.ruoyi.recruit.domain.RecruitCategory" id="RecruitCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="description"    column="description"    />
+        <result property="parentId"    column="parent_id"    />
+        <association property="parentCategory" javaType="com.ruoyi.recruit.domain.RecruitCategory">
+            <result property="categoryName"    column="pc"    />
+            <result property="description"    column="pd"    />
+        </association>
+    </resultMap>
+
+    <resultMap type="com.ruoyi.recruit.domain.RecruitCategory" id="CategoryResult">
+        <result property="id"    column="id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="description"    column="description"    />
+        <result property="parentId"    column="parent_id"    />
+        <collection property="childCategoryList" ofType="RecruitCategory">
+            <result property="id"    column="ci"    />
+            <result property="categoryName"    column="cc"    />
+            <result property="description"    column="cd"    />
+            <result property="parentId"    column="cp"    />
+        </collection>
+    </resultMap>
+
+    <sql id="selectRecruitCategoryVo">
+        select cc.id,
+               cc.category_name,
+               cc.description,
+               cc.parent_id,
+               pc.category_name pc,
+               pc.description pd
+        from recruit_category cc
+        left join recruit_category pc on cc.parent_id = pc.id
+    </sql>
+    <sql id="selectBigCategoryVo">
+        select pc.id,
+               pc.category_name,
+               pc.description,
+               pc.parent_id,
+               cc.id ci,
+               cc.category_name cc,
+               cc.description cd,
+               cc.parent_id cp
+        from recruit_category pc
+                 left join recruit_category cc on pc.id = cc.parent_id
+    </sql>
+
+    <select id="selectBigCategoryList" resultMap="CategoryResult">
+        <include refid="selectBigCategoryVo"/>
+        <where>
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="description != null  and description != ''"> and description like concat('%', #{description}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="params.bigCategory != null and params.bigCategory != ''"><!-- 主页查询所有分类 -->
+                and pc.parent_id is null
+            </if>
+        </where>
+    </select>
+
+    <select id="selectRecruitCategoryList" resultMap="RecruitCategoryResult">
+        <include refid="selectRecruitCategoryVo"/>
+        <where>
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="description != null  and description != ''"> and description like concat('%', #{description}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+
+        </where>
+    </select>
+
+    <select id="selectRecruitCategoryById" parameterType="Long" resultMap="RecruitCategoryResult">
+        <include refid="selectRecruitCategoryVo"/>
+        where cc.id = #{id}
+    </select>
+
+    <insert id="insertRecruitCategory" parameterType="RecruitCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into recruit_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryName != null and categoryName != ''">category_name,</if>
+            <if test="description != null">description,</if>
+            <if test="parentId != null">parent_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryName != null and categoryName != ''">#{categoryName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="parentId != null">#{parentId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRecruitCategory" parameterType="RecruitCategory">
+        update recruit_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryName != null and categoryName != ''">category_name = #{categoryName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRecruitCategoryById" parameterType="Long">
+        delete from recruit_category where id = #{id}
+    </delete>
+
+    <delete id="deleteRecruitCategoryByIds" parameterType="String">
+        delete from recruit_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+<!--    用于数据统计-->
+<!--    统计出所有企业的招聘总人数-->
+    <select id="getCompanySum" resultType="com.ruoyi.recruit.domain.bo.CompanySumHC">
+        SELECT
+            c.name AS name,
+            SUM(p.quantity) AS value
+        FROM
+            recruit_position p
+                JOIN
+            recruit_company_info c ON p.company_id = c.id
+        GROUP BY
+            c.id, c.name
+        ORDER BY
+            value DESC
+    </select>
+<!--    查询工作岗位最多的六个岗位-->
+    <select id="getTop6" resultType="com.ruoyi.recruit.domain.bo.CompanySumHC">
+        SELECT work_city AS name, SUM(quantity) AS value
+        FROM recruit_position
+        GROUP BY work_city
+        ORDER BY value DESC
+        LIMIT 6;
+    </select>
+
+
+</mapper>

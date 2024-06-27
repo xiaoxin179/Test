@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruit.mapper.RecruitLectureMapper">
+
+    <resultMap type="RecruitLecture" id="RecruitLectureResult">
+        <result property="id"    column="id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="companyAddress"    column="company_address"    />
+        <result property="phone"    column="phone"    />
+        <result property="description"    column="description"    />
+        <result property="direct"    column="direct"    />
+        <result property="classroom"    column="classroom"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="auditState"    column="audit_state"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectRecruitLectureVo">
+        select id, company_name, company_address, phone, description, direct, classroom, start_time, audit_state, type from recruit_lecture
+    </sql>
+
+    <select id="selectRecruitLectureList" parameterType="RecruitLecture" resultMap="RecruitLectureResult">
+        <include refid="selectRecruitLectureVo"/>
+        <where>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="companyAddress != null  and companyAddress != ''"> and company_address = #{companyAddress}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="direct != null  and direct != ''"> and direct = #{direct}</if>
+            <if test="classroom != null  and classroom != ''"> and classroom = #{classroom}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="auditState != null "> and audit_state = #{auditState}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+
+    <select id="myLectureList" resultMap="RecruitLectureResult">
+        select l.id,
+               company_name,
+               company_address,
+               l.description,
+               phone,
+               direct,
+               start_time,
+               classroom,
+               l.audit_state,
+               type
+        from recruit_lecture l
+                 left join recruit_company_info c on l.company_name = c.name
+        where user_id = #{userId};
+    </select>
+    <select id="selectRecruitLectureById" parameterType="Long" resultMap="RecruitLectureResult">
+        <include refid="selectRecruitLectureVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertRecruitLecture" parameterType="RecruitLecture" useGeneratedKeys="true" keyProperty="id">
+        insert into recruit_lecture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyName != null">company_name,</if>
+            <if test="companyAddress != null">company_address,</if>
+            <if test="phone != null">phone,</if>
+            <if test="description != null">description,</if>
+            <if test="direct != null">direct,</if>
+            <if test="classroom != null">classroom,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="auditState != null">audit_state,</if>
+            <if test="type != null">type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyName != null">#{companyName},</if>
+            <if test="companyAddress != null">#{companyAddress},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="description != null">#{description},</if>
+            <if test="direct != null">#{direct},</if>
+            <if test="classroom != null">#{classroom},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="auditState != null">#{auditState},</if>
+            <if test="type != null">#{type},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRecruitLecture" parameterType="RecruitLecture">
+        update recruit_lecture
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyName != null">company_name = #{companyName},</if>
+            <if test="companyAddress != null">company_address = #{companyAddress},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="direct != null">direct = #{direct},</if>
+            <if test="classroom != null">classroom = #{classroom},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="auditState != null">audit_state = #{auditState},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRecruitLectureById" parameterType="Long">
+        delete from recruit_lecture where id = #{id}
+    </delete>
+
+    <delete id="deleteRecruitLectureByIds" parameterType="String">
+        delete from recruit_lecture where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

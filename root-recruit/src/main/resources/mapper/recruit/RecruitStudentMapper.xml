@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruit.mapper.RecruitStudentMapper">
+    
+    <resultMap type="RecruitStudent" id="RecruitStudentResult">
+        <result property="id"    column="id"    />
+        <result property="dept"    column="dept"    />
+        <result property="stuClass"    column="stu_class"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="height"    column="height"    />
+        <result property="weight"    column="weight"    />
+        <result property="age"    column="age"    />
+        <result property="identityCard"    column="identity_card"    />
+        <result property="address"    column="address"    />
+        <result property="tel"    column="tel"    />
+        <result property="email"    column="email"    />
+        <result property="major"    column="major"    />
+        <result property="jobIntent"    column="job_intent"    />
+        <result property="skill"    column="skill"    />
+        <result property="award"    column="award"    />
+        <result property="selfEvaluation"    column="self_evaluation"    />
+    </resultMap>
+
+    <sql id="selectRecruitStudentVo">
+        select id, dept, stu_class, code, name, sex, height, weight, age, identity_card, address, tel, email, major, job_intent, skill, award, self_evaluation from recruit_student
+    </sql>
+
+    <select id="selectRecruitStudentList" parameterType="RecruitStudent" resultMap="RecruitStudentResult">
+        <include refid="selectRecruitStudentVo"/>
+        <where>  
+            <if test="dept != null  and dept != ''"> and dept = #{dept}</if>
+            <if test="stuClass != null  and stuClass != ''"> and stu_class = #{stuClass}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="identityCard != null  and identityCard != ''"> and identity_card = #{identityCard}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="tel != null  and tel != ''"> and tel = #{tel}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="jobIntent != null  and jobIntent != ''"> and job_intent like concat('%', #{jobIntent}, '%')</if>
+            <if test="skill != null  and skill != ''"> and skill = #{skill}</if>
+            <if test="award != null  and award != ''"> and award = #{award}</if>
+            <if test="selfEvaluation != null  and selfEvaluation != ''"> and self_evaluation like concat('%', #{selfEvaluation}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectRecruitStudentById" parameterType="Long" resultMap="RecruitStudentResult">
+        <include refid="selectRecruitStudentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRecruitStudent" parameterType="RecruitStudent" useGeneratedKeys="true" keyProperty="id">
+        insert into recruit_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dept != null">dept,</if>
+            <if test="stuClass != null">stu_class,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="height != null">height,</if>
+            <if test="weight != null">weight,</if>
+            <if test="age != null">age,</if>
+            <if test="identityCard != null">identity_card,</if>
+            <if test="address != null">address,</if>
+            <if test="tel != null">tel,</if>
+            <if test="email != null">email,</if>
+            <if test="major != null">major,</if>
+            <if test="jobIntent != null">job_intent,</if>
+            <if test="skill != null">skill,</if>
+            <if test="award != null">award,</if>
+            <if test="selfEvaluation != null">self_evaluation,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dept != null">#{dept},</if>
+            <if test="stuClass != null">#{stuClass},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="height != null">#{height},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="age != null">#{age},</if>
+            <if test="identityCard != null">#{identityCard},</if>
+            <if test="address != null">#{address},</if>
+            <if test="tel != null">#{tel},</if>
+            <if test="email != null">#{email},</if>
+            <if test="major != null">#{major},</if>
+            <if test="jobIntent != null">#{jobIntent},</if>
+            <if test="skill != null">#{skill},</if>
+            <if test="award != null">#{award},</if>
+            <if test="selfEvaluation != null">#{selfEvaluation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRecruitStudent" parameterType="RecruitStudent">
+        update recruit_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dept != null">dept = #{dept},</if>
+            <if test="stuClass != null">stu_class = #{stuClass},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="identityCard != null">identity_card = #{identityCard},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="jobIntent != null">job_intent = #{jobIntent},</if>
+            <if test="skill != null">skill = #{skill},</if>
+            <if test="award != null">award = #{award},</if>
+            <if test="selfEvaluation != null">self_evaluation = #{selfEvaluation},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRecruitStudentById" parameterType="Long">
+        delete from recruit_student where id = #{id}
+    </delete>
+
+    <delete id="deleteRecruitStudentByIds" parameterType="String">
+        delete from recruit_student where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

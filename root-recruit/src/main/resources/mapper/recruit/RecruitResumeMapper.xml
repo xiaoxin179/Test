@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruit.mapper.RecruitResumeMapper">
+
+    <resultMap type="RecruitResume" id="RecruitResumeResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="minority"    column="minority"    />
+        <result property="height"    column="height"    />
+        <result property="weight"    column="weight"    />
+        <result property="politicalOutlook"    column="political_outlook"    />
+        <result property="highestEducation"    column="highest_education"    />
+        <result property="health"    column="health"    />
+        <result property="jobIntention"    column="job_intention"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="photo"    column="photo"    />
+        <result property="major"    column="major"    />
+        <result property="currentResidence"    column="current_residence"    />
+        <result property="postalAddress"    column="postal_address"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="awards"    column="awards"    />
+        <result property="professionalCourses"    column="professional_courses"    />
+        <result property="selfEvaluation"    column="self_evaluation"    />
+        <result property="url"    column="url"    />
+    </resultMap>
+
+    <sql id="selectRecruitResumeVo">
+        select id, user_id, user_name, sex, minority, height, weight, political_outlook, highest_education, health, job_intention, birthday, photo, major, current_residence, postal_address, phone, email, awards, professional_courses, self_evaluation, url from recruit_resume
+    </sql>
+
+    <select id="selectRecruitResumeList" parameterType="RecruitResume" resultMap="RecruitResumeResult">
+        <include refid="selectRecruitResumeVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="minority != null  and minority != ''"> and minority = #{minority}</if>
+            <if test="height != null  and height != ''"> and height = #{height}</if>
+            <if test="weight != null  and weight != ''"> and weight = #{weight}</if>
+            <if test="politicalOutlook != null  and politicalOutlook != ''"> and political_outlook = #{politicalOutlook}</if>
+            <if test="highestEducation != null  and highestEducation != ''"> and highest_education = #{highestEducation}</if>
+            <if test="health != null  and health != ''"> and health = #{health}</if>
+            <if test="jobIntention != null  and jobIntention != ''"> and job_intention = #{jobIntention}</if>
+            <if test="birthday != null  and birthday != ''"> and birthday = #{birthday}</if>
+            <if test="photo != null  and photo != ''"> and photo = #{photo}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="currentResidence != null  and currentResidence != ''"> and current_residence = #{currentResidence}</if>
+            <if test="postalAddress != null  and postalAddress != ''"> and postal_address = #{postalAddress}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="awards != null  and awards != ''"> and awards = #{awards}</if>
+            <if test="professionalCourses != null  and professionalCourses != ''"> and professional_courses = #{professionalCourses}</if>
+            <if test="selfEvaluation != null  and selfEvaluation != ''"> and self_evaluation = #{selfEvaluation}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+        </where>
+    </select>
+
+    <select id="selectRecruitResumeById" parameterType="Long" resultMap="RecruitResumeResult">
+        <include refid="selectRecruitResumeVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectResumeByUserId" resultType="com.ruoyi.recruit.domain.RecruitResume">
+        <include refid="selectRecruitResumeVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertRecruitResume" parameterType="RecruitResume" useGeneratedKeys="true" keyProperty="id">
+        insert into recruit_resume
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="minority != null">minority,</if>
+            <if test="height != null">height,</if>
+            <if test="weight != null">weight,</if>
+            <if test="politicalOutlook != null">political_outlook,</if>
+            <if test="highestEducation != null">highest_education,</if>
+            <if test="health != null">health,</if>
+            <if test="jobIntention != null">job_intention,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="photo != null">photo,</if>
+            <if test="major != null">major,</if>
+            <if test="currentResidence != null">current_residence,</if>
+            <if test="postalAddress != null">postal_address,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="awards != null">awards,</if>
+            <if test="professionalCourses != null">professional_courses,</if>
+            <if test="selfEvaluation != null">self_evaluation,</if>
+            <if test="url != null">url,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="minority != null">#{minority},</if>
+            <if test="height != null">#{height},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="politicalOutlook != null">#{politicalOutlook},</if>
+            <if test="highestEducation != null">#{highestEducation},</if>
+            <if test="health != null">#{health},</if>
+            <if test="jobIntention != null">#{jobIntention},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="photo != null">#{photo},</if>
+            <if test="major != null">#{major},</if>
+            <if test="currentResidence != null">#{currentResidence},</if>
+            <if test="postalAddress != null">#{postalAddress},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="awards != null">#{awards},</if>
+            <if test="professionalCourses != null">#{professionalCourses},</if>
+            <if test="selfEvaluation != null">#{selfEvaluation},</if>
+            <if test="url != null">#{url},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRecruitResume" parameterType="RecruitResume">
+        update recruit_resume
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="minority != null">minority = #{minority},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="politicalOutlook != null">political_outlook = #{politicalOutlook},</if>
+            <if test="highestEducation != null">highest_education = #{highestEducation},</if>
+            <if test="health != null">health = #{health},</if>
+            <if test="jobIntention != null">job_intention = #{jobIntention},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="photo != null">photo = #{photo},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="currentResidence != null">current_residence = #{currentResidence},</if>
+            <if test="postalAddress != null">postal_address = #{postalAddress},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="awards != null">awards = #{awards},</if>
+            <if test="professionalCourses != null">professional_courses = #{professionalCourses},</if>
+            <if test="selfEvaluation != null">self_evaluation = #{selfEvaluation},</if>
+            <if test="url != null">url = #{url},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRecruitResumeById" parameterType="Long">
+        delete from recruit_resume where id = #{id}
+    </delete>
+
+    <delete id="deleteRecruitResumeByIds" parameterType="String">
+        delete from recruit_resume where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
