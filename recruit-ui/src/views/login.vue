@@ -57,7 +57,7 @@
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
-
+import getters   from "@/store/getters";
 export default {
   name: "Login",
   data() {
@@ -128,7 +128,9 @@ export default {
             Cookies.remove('rememberMe');
           }
           this.$store.dispatch("Login", this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
+            if(getters.roles[0]==='student') {
+              router.push({ path: "/recruit/f/index" });
+            }
           }).catch(() => {
             this.loading = false;
             this.getCode();

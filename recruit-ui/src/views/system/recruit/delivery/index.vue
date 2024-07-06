@@ -100,7 +100,7 @@
       <el-table-column label="投递状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="公司ID" align="center" prop="companyId" />
       <el-table-column label="公司名称" align="center" prop="companyName" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" v-if="$store.getters.roles[0]=='auth_company'">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -108,6 +108,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['recruit:delivery:edit']"
+            v-if="$store.getters.roles[0]=='auth_company'"
           >审核</el-button>
           <el-button
             size="mini"
@@ -115,6 +116,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['recruit:delivery:remove']"
+            v-if="$store.getters.roles[0]=='auth_company'"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -195,7 +197,7 @@ import { listDelivery, getDelivery, delDelivery, addDelivery, updateDelivery, ex
 import { mapGetters } from 'vuex'
 import { listResume } from '@/api/recruit/resume'
 import { companyListResume } from '../../../../api/recruit/resume'
-
+import {store} from '@/store/getters'
 export default {
   name: "Delivery",
   components: {
@@ -205,6 +207,7 @@ export default {
       'userId',
       'isCompany',
     ]),
+
   },
   data() {
     return {

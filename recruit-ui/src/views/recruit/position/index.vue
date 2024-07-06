@@ -3,7 +3,7 @@
     <Search/>
     <MyContainer>
       <el-row :gutter="12">
-        <el-col :span="16">
+        <el-col :span="24">
           <el-card v-for="position in positionList" shadow="hover">
             <el-row :gutter="12">
               <el-col :span="12">
@@ -28,9 +28,7 @@
             </el-row>
           </el-card>
         </el-col>
-        <el-col :span="8">
-          <Ad/>
-        </el-col>
+
       </el-row>
     </MyContainer>
   </div>
@@ -43,7 +41,7 @@ import { listPosition } from '@/api/recruit/position'
 import Ad from '@/views/recruit/components/Ad'
 export default {
   name: 'Position',
-  components: { Ad, MyContainer, Search },
+  components: { MyContainer, Search },
   data() {
     return {
       // 查询参数

@@ -129,10 +129,12 @@ export default {
           }
           this.$store.dispatch("Login", this.loginForm).then(() => {
             this.$store.dispatch('GetInfo').then(res=>{
-              if (this.$store.getters.roles.includes('student')) {
-                this.$router.push({ path: this.redirect || "/recruit/f/index" }).catch(()=>{});
+              if (this.$store.getters.roles[0]==='student') {
+                this.$router.push({ path:"/recruit/f/index" })
               } else {
-                this.$router.push({ path: "/" }).catch(()=>{});
+                console.log('登录其他的')
+                this.$router.push({ path: "/" });
+                window.location.reload() //修复登录之后需要刷新页面才可以看到目录的bug
               }
             })
           }).catch(() => {

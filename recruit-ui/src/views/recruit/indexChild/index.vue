@@ -1,6 +1,6 @@
 <template>
 <div>
-  <Banner/>
+<!--  <Banner/>-->
   <Search/>
   <IndexMain/>
   <Footer/>

@@ -1,8 +1,5 @@
 <template>
   <el-row type="flex" justify="center">
-<!--    <el-col :span="leftSpan">-->
-<!--      <slot name="left"></slot>-->
-<!--    </el-col>-->
     <el-col :span="span">
       <slot></slot>
     </el-col>
@@ -11,7 +8,6 @@
     </el-col>
   </el-row>
 </template>
-
 <script>
 export default {
   name: 'MyContainer',

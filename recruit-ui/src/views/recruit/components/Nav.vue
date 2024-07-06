@@ -12,6 +12,7 @@
         <el-menu-item v-if="!name" v-for="(item,index) in items[2]" :index="index+items[0].length+items[1].length+''" @click="changeMenu(index+items[0].length+items[1].length)">
           {{ item }}
         </el-menu-item>
+        <el-menu-item style="margin-left: 600px;display:flex;float: right" @click="$router.push('/login')">后台登录</el-menu-item>
       </el-menu>
     </el-container>
     <div slot="right" v-if="name">
@@ -36,12 +37,14 @@
 <script>
 import MyContainer from '@/components/Me/MyContainer'
 import { mapGetters } from 'vuex'
+import Cookies from "js-cookie";
 export default {
   name: 'Nav',
   components: { MyContainer },
   data(){
     return{
       activeIndex:'0',
+      isLogin:false,
       items:[["首页","岗位"],["投递信息","个人信息","宣讲会"],["企业注册","登录"]],
       // navTos:["/recruit/index","/recruit/post","/recruit/company"],
       navTos:["/recruit/f/index","/recruit/f/position","/recruit/f/delivery","/recruit/f/resume","/recruit/f/lecture","/recruit/f/register","/recruit/f/login"]
@@ -68,6 +71,9 @@ export default {
           location.href = '/recruit/index';
         })
       })
+    },
+    buttonShow(){
+
     }
   }
 }

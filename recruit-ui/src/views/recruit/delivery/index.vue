@@ -3,7 +3,7 @@
     <el-card v-for="delivery in deliveryList" :key="delivery.id">
       <div slot="header" class="clearfix">
         <span>{{ delivery.positionName }}</span>
-        <el-button @click="delDelivery(delivery.id)" style="float: right; padding: 3px 0" type="text" icon="el-icon-delete">删除</el-button>
+        <el-button  @click="delDelivery(delivery.id)" style="float: right; padding: 3px 0" type="text" icon="el-icon-delete">删除</el-button>
       </div>
       <div>
         <el-row :gutter="12">

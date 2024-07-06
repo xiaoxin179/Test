@@ -42,7 +42,6 @@
           <p>
             {{ position.company.description }}
           </p>
-          <Ad/>
         </el-col>
       </el-row>
     </MyContainer>
@@ -52,12 +51,11 @@
 <script>
 import { getPosition } from '@/api/recruit/position'
 import MyContainer from '@/components/Me/MyContainer'
-import Ad from '@/views/recruit/components/Ad'
 import { addDelivery } from '@/api/recruit/delivery'
 
 export default {
   name: 'Detail',
-  components: { Ad, MyContainer },
+  components: { MyContainer },
   data() {
     return {
       tab: 'tab',
